@@ -213,7 +213,12 @@ const excuses = [
     "Got lost in a maze screensaver",
     "My pager is showing only 80085",
     "The paperclip assistant won't let me work",
-    "My GeoCities page needed urgent updates"
+    "My GeoCities page needed urgent updates",
+    "My Netscape Navigator crashed again",
+    "Still waiting for my ICQ message",
+    "Windows 95 blue screened",
+    "My MIDI music collection needs organizing",
+    "The flying toasters won't stop"
 ];
 
 document.getElementById('excuse-button').addEventListener('click', () => {
@@ -277,3 +282,39 @@ function createResponsiveBubbleGrid() {
 // Call the function initially and on window resize
 createResponsiveBubbleGrid();
 window.addEventListener('resize', createResponsiveBubbleGrid);
+
+// Konami code easter egg
+let konamiCode = '';
+document.addEventListener('keydown', (e) => {
+    konamiCode += e.key;
+    if (konamiCode.includes('ArrowUpArrowUpArrowDownArrowDown')) {
+        document.body.style.animation = 'matrix 2s infinite';
+        konamiCode = '';
+    }
+});
+
+function checkBrowserCompatibility() {
+    const features = {
+        webAudio: 'AudioContext' in window || 'webkitAudioContext' in window,
+        localStorage: 'localStorage' in window,
+        grid: CSS.supports('display: grid')
+    };
+    
+    const incompatible = Object.entries(features)
+        .filter(([, supported]) => !supported)
+        .map(([feature]) => feature);
+    
+    if (incompatible.length > 0) {
+        alert(`Warning: Your browser might not support: ${incompatible.join(', ')}`);
+    }
+}
+
+// Monitor performance
+const performanceMonitor = {
+    start: performance.now(),
+    log: function(action) {
+        const duration = performance.now() - this.start;
+        console.log(`${action}: ${duration.toFixed(2)}ms`);
+        this.start = performance.now();
+    }
+};
