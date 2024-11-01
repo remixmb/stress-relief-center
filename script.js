@@ -240,10 +240,15 @@ style.textContent = `
 document.head.appendChild(style);
 
 // Simple visitor counter using localStorage
-const visitorCount = localStorage.getItem('visitorCount') || 0;
-const newCount = parseInt(visitorCount) + 1;
-localStorage.setItem('visitorCount', newCount);
-document.getElementById('visitor-count').textContent = newCount.toString().padStart(5, '0');
+try {
+    const visitorCount = localStorage.getItem('visitorCount') || 0;
+    const newCount = parseInt(visitorCount) + 1;
+    localStorage.setItem('visitorCount', newCount);
+    document.getElementById('visitor-count').textContent = newCount.toString().padStart(5, '0');
+} catch (e) {
+    console.error('Failed to update visitor count:', e);
+    document.getElementById('visitor-count').textContent = '00000';
+}
 
 // Add this function to create a responsive grid
 function createResponsiveBubbleGrid() {
