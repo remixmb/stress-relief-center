@@ -63,6 +63,7 @@ h1, h2 {
     transition: all 0.1s;
     border: 1px solid rgba(255,255,255,0.4);
     box-shadow: inset -2px -2px 4px rgba(0,0,0,0.3);
+    will-change: transform;
 }
 
 .bubble:hover {
@@ -202,6 +203,7 @@ blink {
     z-index: 100;
     opacity: 0.8;
     box-shadow: 0 0 3px rgba(255, 255, 255, 0.5);
+    will-change: transform, opacity;
 }
 
 @keyframes shred {
