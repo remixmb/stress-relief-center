@@ -188,6 +188,11 @@ function createResponsiveBubbleGrid() {
         bubble.className = 'bubble';
         bubble.addEventListener('click', () => {
             if (!bubble.classList.contains('popped')) {
+                // Play pop sound
+                const popSound = document.getElementById('popSound');
+                popSound.currentTime = 0; // Reset sound to start
+                popSound.play().catch(e => console.log('Audio play failed:', e));
+                
                 bubble.classList.add('popped');
                 bubble.style.animation = 'popAnimation 0.3s ease-out';
             }
