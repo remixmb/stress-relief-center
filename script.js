@@ -31,17 +31,26 @@ function playPopSound() {
     if (!audioBuffer) return;
     
     const now = Date.now();
-    const audioObj = audioPool.find(obj => !obj.source || (now - obj.lastPlayed > 100));
+    const audioObj = audioPool.find(obj => !obj.source || (now - obj.lastPlayed > 20));
     
     if (audioObj) {
         if (audioObj.source) {
-            audioObj.source.stop();
+            try {
+                audioObj.source.stop();
+            } catch (e) {
+                // Ignore any errors from stopping
+            }
         }
         
         audioObj.source = audioContext.createBufferSource();
         audioObj.source.buffer = audioBuffer;
-        audioObj.source.connect(audioContext.destination);
-        audioObj.source.start(0);
+        const gainNode = audioContext.createGain();
+        gainNode.gain.value = 0.95 + Math.random() * 0.1;
+        
+        audioObj.source.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        audioObj.source.start(0, 0.01);
         audioObj.lastPlayed = now;
     }
 }
