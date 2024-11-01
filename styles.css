@@ -85,17 +85,21 @@ h1, h2 {
 #rant-box {
     position: relative;
     width: 100%;
-    height: 100px;
+    min-height: 100px;
+    height: auto;
     background-color: #000033;
     color: #00ff00;
     border: 2px solid #00ff00;
     font-family: 'VT323', monospace;
-    font-size: 18px;
-    padding: 10px;
+    font-size: clamp(16px, 3vw, 18px);
+    padding: 15px;
     margin: 10px 0;
     overflow: hidden;
-    resize: none;
+    resize: vertical;
     transition: all 0.3s ease;
+    box-sizing: border-box;
+    max-height: 300px;
+    line-height: 1.4;
 }
 
 #rant-box:focus {
@@ -270,5 +274,25 @@ blink {
 
     h1, h2 {
         font-size: 1.5em;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    #rant-box {
+        min-height: 80px;
+        padding: 10px;
+        font-size: 16px;
+    }
+    
+    .rant-section {
+        margin: 15px 0;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    #rant-box {
+        min-height: 60px;
+        padding: 8px;
+        font-size: 14px;
     }
 } 
