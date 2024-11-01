@@ -22,6 +22,8 @@ body {
     box-shadow: 10px 10px 0 #ff00ff,
                 15px 15px 0 #ff0000,
                 20px 20px 30px rgba(0, 0, 0, 0.7);
+    width: calc(100% - 40px);
+    box-sizing: border-box;
 }
 
 .header-banner {
@@ -214,4 +216,59 @@ blink {
 
 .excuse-generator button {
     margin-bottom: 15px;
+}
+
+@media screen and (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 10px;
+        margin: 0;
+        box-shadow: 5px 5px 0 #ff00ff,
+                    8px 8px 0 #ff0000,
+                    10px 10px 15px rgba(0, 0, 0, 0.7);
+    }
+
+    .header-banner {
+        font-size: 20px;
+        margin: -10px -10px 10px -10px;
+        padding: 10px;
+    }
+
+    #bubble-wrap {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .bubble {
+        width: 30px;
+        height: 30px;
+    }
+
+    button {
+        padding: 8px 16px;
+        font-size: 18px;
+    }
+
+    #rant-box {
+        font-size: 16px;
+    }
+
+    #excuse-text {
+        font-size: 16px;
+        padding: 10px;
+    }
+
+    .visitor-counter p {
+        font-size: 16px;
+    }
+
+    .counter-number {
+        font-size: 20px;
+    }
+
+    h1, h2 {
+        font-size: 1.5em;
+    }
 } 

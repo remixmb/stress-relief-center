@@ -168,3 +168,30 @@ const visitorCount = localStorage.getItem('visitorCount') || 0;
 const newCount = parseInt(visitorCount) + 1;
 localStorage.setItem('visitorCount', newCount);
 document.getElementById('visitor-count').textContent = newCount.toString().padStart(5, '0');
+
+// Add this function to create a responsive grid
+function createResponsiveBubbleGrid() {
+    const bubbleWrap = document.getElementById('bubble-wrap');
+    const isMobile = window.innerWidth <= 600;
+    const columns = isMobile ? 4 : 8;
+    const rows = isMobile ? 6 : 4;
+    const totalBubbles = columns * rows;
+
+    bubbleWrap.innerHTML = '';
+    
+    for (let i = 0; i < totalBubbles; i++) {
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        bubble.addEventListener('click', () => {
+            if (!bubble.classList.contains('popped')) {
+                bubble.classList.add('popped');
+                bubble.style.animation = 'popAnimation 0.3s ease-out';
+            }
+        });
+        bubbleWrap.appendChild(bubble);
+    }
+}
+
+// Call the function initially and on window resize
+createResponsiveBubbleGrid();
+window.addEventListener('resize', createResponsiveBubbleGrid);
