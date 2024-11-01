@@ -3,7 +3,7 @@ let currentBubble = null;
 let offsetX, offsetY;
 
 // Create an audio pool at the start of your script
-const AUDIO_POOL_SIZE = 8;
+const AUDIO_POOL_SIZE = 16;
 const audioPool = [];
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 let audioBuffer = null;
@@ -11,6 +11,9 @@ let audioBuffer = null;
 // Initialize audio pool
 async function initAudioPool() {
     try {
+        // Pre-suspend the audio context to save resources
+        audioContext.suspend();
+        
         const response = await fetch('sounds/bubble-sound-43207.mp3');
         const arrayBuffer = await response.arrayBuffer();
         audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
@@ -21,6 +24,11 @@ async function initAudioPool() {
                 lastPlayed: 0
             });
         }
+        
+        // Resume the context when user interacts
+        document.addEventListener('click', () => {
+            audioContext.resume();
+        }, { once: true });
     } catch (e) {
         console.error('Audio initialization failed:', e);
     }
