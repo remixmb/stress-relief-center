@@ -37,7 +37,7 @@ A retro-styled web application designed to help relieve work-related stress thro
 1. Clone the repository
 
 ```bash
-git clone [https://github.com/remixmb/stress-relief-center/]
+git clone https://github.com/remixmb/stress-relief-center/
 ```
 
 2. Open `index.html` in your browser
