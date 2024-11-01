@@ -11,12 +11,18 @@ let audioBuffer = null;
 // Initialize audio pool
 async function initAudioPool() {
     try {
-        // Pre-suspend the audio context to save resources
         audioContext.suspend();
+        // Add loading indicator
+        const loadingIndicator = document.createElement('div');
+        loadingIndicator.className = 'loading-audio';
+        loadingIndicator.textContent = '🎵 Loading sounds...';
+        document.body.appendChild(loadingIndicator);
         
         const response = await fetch('sounds/bubble-sound-43207.mp3');
         const arrayBuffer = await response.arrayBuffer();
         audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+        
+        loadingIndicator.remove();
         
         for (let i = 0; i < AUDIO_POOL_SIZE; i++) {
             audioPool.push({
@@ -31,6 +37,8 @@ async function initAudioPool() {
         }, { once: true });
     } catch (e) {
         console.error('Audio initialization failed:', e);
+        // Show error message to user
+        alert('Sound effects failed to load. Check your connection and refresh.');
     }
 }
 
@@ -86,6 +94,11 @@ function createDraggableBubble() {
             setTimeout(() => bubble.remove(), 300);
         }
     });
+
+    // Add touch events
+    bubble.addEventListener('touchstart', handleTouchStart);
+    bubble.addEventListener('touchmove', handleTouchMove);
+    bubble.addEventListener('touchend', handleTouchEnd);
 
     return bubble;
 }
