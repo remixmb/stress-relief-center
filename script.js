@@ -2,6 +2,53 @@ let isDragging = false;
 let currentBubble = null;
 let offsetX, offsetY;
 
+// Create an audio pool at the start of your script
+const AUDIO_POOL_SIZE = 8;
+const audioPool = [];
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+let audioBuffer = null;
+
+// Initialize audio pool
+async function initAudioPool() {
+    try {
+        const response = await fetch('sounds/bubble-sound-43207.mp3');
+        const arrayBuffer = await response.arrayBuffer();
+        audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+        
+        for (let i = 0; i < AUDIO_POOL_SIZE; i++) {
+            audioPool.push({
+                source: null,
+                lastPlayed: 0
+            });
+        }
+    } catch (e) {
+        console.error('Audio initialization failed:', e);
+    }
+}
+
+// Function to play sound
+function playPopSound() {
+    if (!audioBuffer) return;
+    
+    const now = Date.now();
+    const audioObj = audioPool.find(obj => !obj.source || (now - obj.lastPlayed > 100));
+    
+    if (audioObj) {
+        if (audioObj.source) {
+            audioObj.source.stop();
+        }
+        
+        audioObj.source = audioContext.createBufferSource();
+        audioObj.source.buffer = audioBuffer;
+        audioObj.source.connect(audioContext.destination);
+        audioObj.source.start(0);
+        audioObj.lastPlayed = now;
+    }
+}
+
+// Initialize the audio pool
+initAudioPool();
+
 function createDraggableBubble() {
     const bubble = document.createElement('div');
     bubble.className = 'bubble';
@@ -18,8 +65,7 @@ function createDraggableBubble() {
     bubble.addEventListener('dblclick', () => {
         if (!bubble.classList.contains('popped')) {
             bubble.classList.add('popped');
-            const audio = new Audio('data:audio/wav;base64,//uQRAAAAWMSLwUIYAAsYkXgoQwAEaYLWfkWgAI0wWs/ItAAAGDgYtAgAyN+QWaAAihwMWm4G8QQRDiMcCBcH3Cc+CDv/7xA4Tvh9Rz/y8QADBwMWgQAZG/ILNAARQ4GLTcDeIIIhxGOBAuD7hOfBB3/94gcJ3w+o5/5eIAIAAAVwWgQAVQ2ORaIQwEMAJiDg95G4nQL7mQVWI6GwRcfsZAcsKkJvxgxEjzFUgfHoSQ9Qq7KNwqHwuB13MA4a1q/DmBrHgPcmjiGoh//EwC5nGPEmS4RcfkVKOhJf+WOgoxJclFz3kgn//dBA+ya1GhurNn8zb//9NNutNuhz31f////9vt///z+IdAEAAAK4LQIAKobHItEIYCGAExBwe8jcToF9zIKrEdDYIuP2MgOWFSE34wYiR5iqQPj0JIeoVdlG4VD4XA67mAcNa1fhzA1jwHuTRxDUQ//iYBczjHiTJcIuPyKlHQkv/LHQUYkuSi57yQT//uggfZNajQ3Vmz+Zt//+mm3Wm3Q576v////+32///5/EOgAAADVghQAAAAA==');
-            audio.play();
+            playPopSound();
             setTimeout(() => bubble.remove(), 300);
         }
     });
@@ -62,11 +108,7 @@ for (let i = 0; i < 48; i++) {
     
     bubble.addEventListener('click', () => {
         if (!bubble.classList.contains('popped')) {
-            // Play pop sound
-            const popSound = document.getElementById('popSound');
-            popSound.currentTime = 0; // Reset sound to start
-            popSound.play().catch(e => console.log('Audio play failed:', e));
-            
+            playPopSound();
             bubble.classList.add('popped');
             bubble.style.animation = 'popAnimation 0.3s ease-out';
         }
@@ -188,11 +230,7 @@ function createResponsiveBubbleGrid() {
         bubble.className = 'bubble';
         bubble.addEventListener('click', () => {
             if (!bubble.classList.contains('popped')) {
-                // Play pop sound
-                const popSound = document.getElementById('popSound');
-                popSound.currentTime = 0; // Reset sound to start
-                popSound.play().catch(e => console.log('Audio play failed:', e));
-                
+                playPopSound();
                 bubble.classList.add('popped');
                 bubble.style.animation = 'popAnimation 0.3s ease-out';
             }
